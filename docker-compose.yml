@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  node:
+    build:
+        context: ./
+        dockerfile: dockerfile
+    expose:
+        - "3005"
+    ports:
+        - "3005:3005"

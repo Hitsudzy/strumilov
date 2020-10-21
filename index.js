@@ -19,7 +19,6 @@ app.post('/api/gethtml', (req, res) => {
         function requestData() {
             for(let i = 1; i < 11; i++){
                 var requestUrl = url + encodeURIComponent(search) + '&page=' + i;
-                console.log(requestUrl);
                 axios.get(requestUrl)
                     .then(response => {
                         if(findVendorPos(response.data, i)){
