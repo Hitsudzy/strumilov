@@ -14,15 +14,25 @@ app.use(express.json());
 app.post('/api/gethtml', (req, res) => {
     let search = req.body.phrase,
         vendor = req.body.vendorCode,
-        result = [];
+        result = [],
+        reqCount = 11,
+        counter = 1;
+        
     
         function requestData() {
-            for(let i = 1; i < 11; i++){
+            for(let i = 1; i < reqCount; i++){
                 var requestUrl = url + encodeURIComponent(search) + '&page=' + i;
                 axios.get(requestUrl)
                     .then(response => {
                         if(findVendorPos(response.data, i)){
                             result.push({phrase: search, position: findVendorPos(response.data, i)});
+                        }
+                        counter ++;
+                        if(counter === reqCount){
+                            if(!(result.length)){
+                                result.push({phrase: search, position: '-'});
+                            }
+                            res.status(200).json(result);
                         }
                     })
                     .catch(error => {
@@ -50,12 +60,6 @@ app.post('/api/gethtml', (req, res) => {
             };
         }
     requestData();
-    setTimeout(function(){
-        if(!(result.length)){
-            result.push({phrase: search, position: '-'});
-        }
-        res.status(200).json(result);
-    },3000);
 });
 
 app.use(express.static(path.resolve(__dirname, 'client')))
